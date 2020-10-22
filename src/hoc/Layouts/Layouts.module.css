@@ -1,0 +1,11 @@
+.Layouts {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.Layouts main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
