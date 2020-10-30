@@ -3,29 +3,10 @@ import classes from './Auth.module.css'
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import is from 'is_js'
-import axios from 'axios'
+import {connect} from "react-redux";
+import {auth} from "../../store/actions/auth";
 
-// <!-- The core Firebase JS SDK is always required and must be listed first -->
-// <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
-//
-// <!-- TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries -->
-//
-// <script>
-//     // Your web app's Firebase configuration
-//     var firebaseConfig = {
-//     apiKey: "AIzaSyDi6rZEGQbHzNd24ea93dLw1Jcyw6B5h3A",
-//     authDomain: "react-quiz-e2d80.firebaseapp.com",
-//     databaseURL: "https://react-quiz-e2d80.firebaseio.com",
-//     projectId: "react-quiz-e2d80",
-//     storageBucket: "react-quiz-e2d80.appspot.com",
-//     messagingSenderId: "539358075125",
-//     appId: "1:539358075125:web:c12905155d28f3b79ecdbc"
-// };
-//     // Initialize Firebase
-//     firebase.initializeApp(firebaseConfig);
-// </script>
-export default class Auth extends Component {
+class Auth extends Component {
 
     state = {
         isFormValid: false,
@@ -57,35 +38,12 @@ export default class Auth extends Component {
         }
     }
 
-    loginHandler = async () => {
-        const authData = {
-            email: this.state.formControls.email.value,
-            password: this.state.formControls.password.value,
-            returnSecureToken: true
-        }
-        const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDi6rZEGQbHzNd24ea93dLw1Jcyw6B5h3A', authData)
-
-        try {
-            console.log(response.data)
-        } catch (e) {
-            console.log(e)
-        }
+    loginHandler = () => {
+        this.props.auth(this.state.formControls.email.value, this.state.formControls.password.value, true)
     }
 
-    registerHandler = async () => {
-        const authData = {
-            email: this.state.formControls.email.value,
-            password: this.state.formControls.password.value,
-            returnSecureToken: true
-        }
-        const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDi6rZEGQbHzNd24ea93dLw1Jcyw6B5h3A', authData)
-
-        try {
-            console.log(response.data)
-        } catch (e) {
-            console.log(e)
-        }
-
+    registerHandler = () => {
+        this.props.auth(this.state.formControls.email.value, this.state.formControls.password.value, false)
     }
 
     submitHandler = event => {
@@ -185,3 +143,11 @@ export default class Auth extends Component {
         )
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return {
+        auth: (email, password, isLogin) => dispatch(auth(email, password, isLogin))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Auth)
